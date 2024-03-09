@@ -12,6 +12,31 @@ export class GithubApi {
     private delay: (ms: number) => Promise<void>
   ) {}
 
+  async getRepositories(user: string) {
+    let page = 1;
+    const repositories: OrgRepoResponse[] = [];
+    while (true) {
+      const response = await this.fetch(
+        `https://api.github.com/users/${user}/repos?per_page=30&page=${page}`,
+        {
+          headers: {
+            'User-Agent': 'Qwik Workshop',
+            'X-GitHub-Api-Version': '2022-11-28',
+            Authorization: this.token ? 'Bearer ' + this.token : '',
+          },
+        }
+      );
+
+      const json = await response.json();
+      repositories.push(...(json as OrgRepoResponse[]));
+      if (json.length < 30) {
+        break;
+      }
+      page++;
+    }
+    return repositories;
+  }
+
   async getRepository(user: string, repo: string) {
     const headers: HeadersInit = {
       'User-Agent': 'Qwik Workshop',
