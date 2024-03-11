@@ -47,6 +47,23 @@ describe('github-api', () => {
       delayMock.mock.results[0].value.resolve();
       expect(await responsePromise).toEqual({ response: 'timeout' });
     });
+    it('should handle error response', async ({ expect }) => {
+      const responsePromise = api.getRepository('USERNAME', 'REPOSITORY');
+      expect(fetchMock).toHaveBeenCalledWith(
+        'https://api.github.com/repos/USERNAME/REPOSITORY',
+        {
+          headers: {
+            'User-Agent': 'Qwik Workshop',
+            'X-GitHub-Api-Version': '2022-11-28',
+            Authorization: 'Bearer TOKEN',
+          },
+        }
+      );
+      fetchMock.mock.results[0].value.resolve(
+        new Response(null, { status: 404 })
+      );
+      expect(await responsePromise).toEqual({ response: 'error' });
+    });
   });
 
   describe('getRepositories', () => {
