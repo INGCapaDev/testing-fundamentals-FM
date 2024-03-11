@@ -32,7 +32,7 @@ devDependencies:
     specifier: ^20.0.0
     version: 20.0.0
   '@playwright/test':
-    specifier: ^1.41.2
+    specifier: ^1.42.1
     version: 1.42.1
   '@storybook/addon-essentials':
     specifier: ^7.4.6
